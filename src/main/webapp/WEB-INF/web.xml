@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+  <display-name>CMS</display-name>
+  <description>CMS</description>
+  
+  <servlet>
+    <servlet-name>InitBackEnd</servlet-name>
+    <servlet-class>org.dew.cms.backend.web.InitBackEnd</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>WebServices</servlet-name>
+    <servlet-class>org.dew.cms.backend.web.WebServices</servlet-class>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>WebMultimedia</servlet-name>
+    <servlet-class>org.dew.cms.backend.web.WebMultimedia</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>InitBackEnd</servlet-name>
+    <url-pattern>/init</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>WebServices</servlet-name>
+    <url-pattern>/ws/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>WebMultimedia</servlet-name>
+    <url-pattern>/multimedia/*</url-pattern>
+  </servlet-mapping>
+  
+  <session-config>
+    <session-timeout>20</session-timeout>
+  </session-config>
+  
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>
