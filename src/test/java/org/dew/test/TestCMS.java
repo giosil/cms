@@ -1,6 +1,6 @@
 package org.dew.test;
 
-import org.dew.cms.backend.ws.WSFM;
+import org.dew.cms.ws.WSFM;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

@@ -8,23 +8,16 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.dew.cms.backend.Article;
-import org.dew.cms.backend.Multimedia;
-import org.dew.cms.backend.Page;
-import org.dew.cms.backend.Tag;
-import org.dew.cms.backend.User;
-
-import org.dew.cms.backend.util.CMSCache;
-
-import org.dew.cms.backend.ws.WSArticoli;
-import org.dew.cms.backend.ws.WSCategorie;
-import org.dew.cms.backend.ws.WSComuni;
-import org.dew.cms.backend.ws.WSPagine;
-import org.dew.cms.backend.ws.WSPortale;
-import org.dew.cms.backend.ws.WSSottocategorie;
-import org.dew.cms.backend.ws.WSTag;
-import org.dew.cms.backend.ws.WSTipiArticolo;
-import org.dew.cms.backend.ws.WSUtenti;
+import org.dew.cms.util.CMSCache;
+import org.dew.cms.ws.WSArticoli;
+import org.dew.cms.ws.WSCategorie;
+import org.dew.cms.ws.WSComuni;
+import org.dew.cms.ws.WSPagine;
+import org.dew.cms.ws.WSPortale;
+import org.dew.cms.ws.WSSottocategorie;
+import org.dew.cms.ws.WSTag;
+import org.dew.cms.ws.WSTipiArticolo;
+import org.dew.cms.ws.WSUtenti;
 
 /**
  * CMS proxy. 

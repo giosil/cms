@@ -6,17 +6,17 @@
   
   <servlet>
     <servlet-name>InitBackEnd</servlet-name>
-    <servlet-class>org.dew.cms.backend.web.InitBackEnd</servlet-class>
+    <servlet-class>org.dew.cms.web.InitBackEnd</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet>
     <servlet-name>WebServices</servlet-name>
-    <servlet-class>org.dew.cms.backend.web.WebServices</servlet-class>
+    <servlet-class>org.dew.cms.web.WebServices</servlet-class>
     <load-on-startup>2</load-on-startup>
   </servlet>
   <servlet>
     <servlet-name>WebMultimedia</servlet-name>
-    <servlet-class>org.dew.cms.backend.web.WebMultimedia</servlet-class>
+    <servlet-class>org.dew.cms.web.WebMultimedia</servlet-class>
   </servlet>
   
   <servlet-mapping>

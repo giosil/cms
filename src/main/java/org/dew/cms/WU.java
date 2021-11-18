@@ -10,13 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.dew.cms.backend.Article;
-import org.dew.cms.backend.Multimedia;
-import org.dew.cms.backend.Page;
-import org.dew.cms.backend.Place;
-import org.dew.cms.backend.Tag;
-import org.dew.cms.backend.User;
-
 import org.util.WUtil;
 
 /**
@@ -232,6 +225,41 @@ class WU
   }
   
   // Parametri ---------------------------------------------------------------- //
+  
+  public static
+  int getCategoryPar(HttpServletRequest request)
+  {
+    Object value = request.getParameter(CMS.PAR_CATEGORY);
+    return toInt(value, 0); 
+  }
+  
+  public static
+  int getSubcategoryPar(HttpServletRequest request)
+  {
+    Object value = request.getParameter(CMS.PAR_SUBCATEGORY);
+    return toInt(value, 0); 
+  }
+  
+  public static
+  int getTypePar(HttpServletRequest request)
+  {
+    Object value = request.getParameter(CMS.PAR_TYPE);
+    return toInt(value, 0); 
+  }
+  
+  public static
+  int getPagePar(HttpServletRequest request)
+  {
+    Object value = request.getParameter(CMS.PAR_PAGE);
+    return toInt(value, 0); 
+  }
+  
+  public static
+  int getArticlePar(HttpServletRequest request)
+  {
+    Object value = request.getParameter(CMS.PAR_ARTICLE);
+    return toInt(value, 0); 
+  }
   
   public static
   int getParamInt(HttpServletRequest request, String sParamName)
