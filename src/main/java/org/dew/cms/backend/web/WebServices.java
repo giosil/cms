@@ -1,5 +1,9 @@
 package org.dew.cms.backend.web;
 
+import java.security.Principal;
+
+import java.util.Map;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
@@ -19,6 +23,12 @@ import org.dew.cms.backend.ws.WSSottocategorie;
 import org.dew.cms.backend.ws.WSTag;
 import org.dew.cms.backend.ws.WSTipiArticolo;
 import org.dew.cms.backend.ws.WSUtenti;
+
+import org.dew.cms.common.IUtente;
+
+import org.rpc.util.SimplePrincipal;
+
+import org.util.WUtil;
 
 public
 class WebServices extends org.rpc.server.RpcServlet
@@ -48,11 +58,11 @@ class WebServices extends org.rpc.server.RpcServlet
     restTracer       = null;
     
     legacy           = false;
-    createRpcContex  = false;
+    createRpcContex  = true;
     checkSession     = false;
     checkSessionREST = false;
     restful          = true;
-    basicAuth        = false;
+    basicAuth        = true;
     
     addWebService(new WSLingue(),         "LINGUE",         "Servizio gestione linuge");
     addWebService(new WSTag(),            "TAG",            "Servizio gestione tag");
@@ -69,5 +79,26 @@ class WebServices extends org.rpc.server.RpcServlet
     addWebService(new WSPagine(),         "PAGINE",         "Servizio gestione pagine");
     addWebService(new WSUtenti(),         "UTENTI",         "Servizio gestione utenti");
     addWebService(new WSFM(),             "FM",             "Servizio File Manager");
+  }
+  
+  @Override
+  protected
+  Principal authenticate(String username, String password)
+  {
+    try {
+      Map<String, Object> mapUser = WSUtenti.check(username, password, IUtente.ID_TIPO_INTERNAL_USER);
+      if(mapUser == null || mapUser.isEmpty()) return null;
+      
+      String name = WUtil.toString(mapUser.get(IUtente.sUSERNAME), null);
+      if(name == null || name.length() == 0) {
+        return null;
+      }
+      
+      return new SimplePrincipal(name);
+    }
+    catch(Exception ex) {
+      ex.printStackTrace();
+    }
+    return null;
   }
 }

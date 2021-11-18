@@ -21,6 +21,4 @@ interface IUtente
   public final static String sORA_REG      = "or";
   public final static String sREG_DAL      = "rd";
   public final static String sREG_AL       = "ra";
-  
-  public final static int ID_TIPO_INTERNAL_USER = 1;
 }

@@ -1,5 +1,7 @@
 package org.dew.test;
 
+import org.dew.cms.backend.ws.WSFM;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -15,6 +17,7 @@ public class TestCMS extends TestCase {
   }
   
   public void testApp() throws Exception {
+    System.out.println(WSFM.encrypt("admin"));
   }
   
 }

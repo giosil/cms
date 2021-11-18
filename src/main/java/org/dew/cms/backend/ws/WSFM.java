@@ -704,6 +704,37 @@ class WSFM
   }
   
   public static
+  String encrypt(String sText)
+  {
+    if (sText == null) {
+      return null;
+    }
+    // La chiave puo' contenere caratteri che appartengono all'insieme
+    // [32 (spazio) - 95 (_)]
+    String sKey = "@X<:S=?'B;F)<=B>D@?=:D';@=B<?C;)@:'/=?A-X0=;(?1<X!";
+    int k = 0;
+    StringBuffer sb = new StringBuffer(sText.length());
+    for (int i = 0; i < sText.length(); i++) {
+      if (k >= sKey.length() - 1) {
+        k = 0;
+      } else {
+        k++;
+      }
+      int c = sText.charAt(i);
+      int d = sKey.charAt(k);
+      int r = c;
+      if (c >= 32 && c <= 126) {
+        r = r - d;
+        if (r < 32) {
+          r = 127 + r - 32;
+        }
+      }
+      sb.append((char) r);
+    }
+    return sb.toString();
+  }
+  
+  public static
   String decrypt(String sText)
   {
     if(sText == null) return null;

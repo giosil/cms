@@ -1,5 +1,7 @@
 package org.dew.cms.backend.ws;
 
+import java.security.Principal;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,10 +28,23 @@ import org.dew.cms.backend.util.QueryBuilder;
 import org.dew.cms.common.IArticolo;
 import org.dew.cms.common.IUtente;
 
+import org.rpc.util.RPCContext;
+
 public 
 class WSUtenti implements IUtente 
 {
   protected static Logger oLogger = Logger.getLogger(WSUtenti.class);
+  
+  public static
+  String getCurrentUser()
+    throws Exception
+  {
+    Principal userPrincipal = RPCContext.getUserPrincipal();
+    if(userPrincipal == null) return "";
+    
+    String result = userPrincipal.getName();
+    return result;
+  }
   
   public static
   List<List<Object>> getTipiUtenti()
@@ -56,7 +71,7 @@ class WSUtenti implements IUtente
       }
     }
     catch (Exception ex) {
-      oLogger.error("Eccezione in WSUtenti.getTipiUtenti()", ex);
+      oLogger.error("Exception in WSUtenti.getTipiUtenti()", ex);
       throw ex;
     }
     finally {
@@ -129,7 +144,7 @@ class WSUtenti implements IUtente
       }
     }
     catch (Exception ex) {
-      oLogger.error("Eccezione in WSUtenti.find(" + mapFilter + ")", ex);
+      oLogger.error("Exception in WSUtenti.find(" + mapFilter + ")", ex);
       throw ex;
     }
     finally {
@@ -151,7 +166,7 @@ class WSUtenti implements IUtente
       mapResult = read(conn, iId);
     }
     catch (Exception ex) {
-      oLogger.error("Eccezione in WSUtenti.read(" + iId + ")", ex);
+      oLogger.error("Exception in WSUtenti.read(" + iId + ")", ex);
       throw ex;
     }
     finally {
@@ -198,7 +213,7 @@ class WSUtenti implements IUtente
       }
     }
     catch (Exception ex) {
-      oLogger.error("Eccezione in WSUtenti.getReadArticles(" + iId + ")", ex);
+      oLogger.error("Exception in WSUtenti.getReadArticles(" + iId + ")", ex);
       throw ex;
     }
     finally {
@@ -248,7 +263,7 @@ class WSUtenti implements IUtente
     }
     catch (Exception ex) {
       if(ut != null) try{ ut.rollback(); } catch(Exception exut) {}
-      oLogger.error("Eccezione in WSUtenti.register(" + user + ")", ex);
+      oLogger.error("Exception in WSUtenti.register(" + user + ")", ex);
       throw ex;
     }
     finally {
@@ -304,7 +319,7 @@ class WSUtenti implements IUtente
     }
     catch (Exception ex) {
       if(ut != null) try{ ut.rollback(); } catch(Exception exut) {}
-      oLogger.error("Eccezione in WSUtenti.update(" + user + ")", ex);
+      oLogger.error("Exception in WSUtenti.update(" + user + ")", ex);
       throw ex;
     }
     finally {
@@ -333,7 +348,7 @@ class WSUtenti implements IUtente
     }
     catch (Exception ex) {
       if(ut != null) try{ ut.rollback(); } catch(Exception exut) {}
-      oLogger.error("Eccezione in WSUtenti.insert(" + mapValues + ")", ex);
+      oLogger.error("Exception in WSUtenti.insert(" + mapValues + ")", ex);
       throw ex;
     }
     finally {
@@ -360,7 +375,7 @@ class WSUtenti implements IUtente
     }
     catch (Exception ex) {
       if(ut != null) try{ ut.rollback(); } catch(Exception exut) {}
-      oLogger.error("Eccezione in WSUtenti.update(" + mapValues + ")", ex);
+      oLogger.error("Exception in WSUtenti.update(" + mapValues + ")", ex);
       throw ex;
     }
     finally {
@@ -390,7 +405,7 @@ class WSUtenti implements IUtente
     qb.add("CITTA");
     qb.add("EMAIL");
     String sSQL = qb.update("CMS_UTENTI", true);
-    sSQL += "WHERE ID_UTENTE = ?";
+    sSQL += "WHERE ID_UTENTE=?";
     
     PreparedStatement pstm = null;
     try {
@@ -415,7 +430,7 @@ class WSUtenti implements IUtente
       int p = 0;
       pstm.setString(++p, sUsername);
       if(sPassword != null && sPassword.length() > 0) {
-        pstm.setString(++p, encrypt(sPassword));
+        pstm.setString(++p, WSFM.encrypt(sPassword));
       }
       pstm.setInt(++p, iIdTipoUtente);
       pstm.setString(++p, sCognome);
@@ -460,7 +475,7 @@ class WSUtenti implements IUtente
     }
     catch (Exception ex) {
       if(ut != null) try{ ut.rollback(); } catch(Exception exut) {}
-      oLogger.error("Eccezione in WSUtenti.setEnabled(" + iId + "," + boEnabled + ")", ex);
+      oLogger.error("Exception in WSUtenti.setEnabled(" + iId + "," + boEnabled + ")", ex);
       throw ex;
     }
     finally {
@@ -491,7 +506,7 @@ class WSUtenti implements IUtente
     }
     catch (Exception ex) {
       if(ut != null) try{ ut.rollback(); } catch(Exception exut) {}
-      oLogger.error("Eccezione in WSUtenti.delete(" + iId + ")", ex);
+      oLogger.error("Exception in WSUtenti.delete(" + iId + ")", ex);
       return false;
     }
     finally {
@@ -508,17 +523,15 @@ class WSUtenti implements IUtente
     if(sUsername == null || sUsername.length() == 0) return new HashMap<String, Object>();
     if(sPassword == null || sPassword.length() == 0) return new HashMap<String, Object>();
     
-    String sSQL = "SELECT ID_UTENTE FROM CMS_UTENTI WHERE USERNAME=? AND PASSWORD=? AND ATTIVO=?";
-    
     Map<String, Object> mapResult = null;
     Connection conn = null;
     PreparedStatement pstm = null;
     ResultSet rs = null;
     try {
       conn = ConnectionManager.getDefaultConnection();
-      pstm = conn.prepareStatement(sSQL);
+      pstm = conn.prepareStatement("SELECT ID_UTENTE FROM CMS_UTENTI WHERE USERNAME=? AND PASSWORD=? AND ATTIVO=?");
       pstm.setString(1, sUsername);
-      pstm.setString(2, encrypt(sPassword));
+      pstm.setString(2, WSFM.encrypt(sPassword));
       pstm.setString(3, QueryBuilder.decodeBoolean(true));
       rs = pstm.executeQuery();
       if(rs.next()) {
@@ -527,7 +540,7 @@ class WSUtenti implements IUtente
       }
     }
     catch (Exception ex) {
-      oLogger.error("Eccezione in WSUtenti.check", ex);
+      oLogger.error("Exception in WSUtenti.check(" + sUsername + ",*)", ex);
       throw ex;
     }
     finally {
@@ -537,7 +550,44 @@ class WSUtenti implements IUtente
     }
     if(mapResult == null) mapResult = new HashMap<String, Object>();
     return mapResult;
-  }	
+  }
+  
+  public static
+  Map<String, Object> check(String sUsername, String sPassword, int iIdTipo)
+      throws Exception
+  {
+    if(sUsername == null || sUsername.length() == 0) return new HashMap<String, Object>();
+    if(sPassword == null || sPassword.length() == 0) return new HashMap<String, Object>();
+    
+    Map<String, Object> mapResult = null;
+    Connection conn = null;
+    PreparedStatement pstm = null;
+    ResultSet rs = null;
+    try {
+      conn = ConnectionManager.getDefaultConnection();
+      pstm = conn.prepareStatement("SELECT ID_UTENTE FROM CMS_UTENTI WHERE USERNAME=? AND PASSWORD=? AND ID_TIPO_UTENTE=? AND ATTIVO=?");
+      pstm.setString(1, sUsername);
+      pstm.setString(2, WSFM.encrypt(sPassword));
+      pstm.setInt(3,    iIdTipo);
+      pstm.setString(4, QueryBuilder.decodeBoolean(true));
+      rs = pstm.executeQuery();
+      if(rs.next()) {
+        int iIdUtente = rs.getInt("ID_UTENTE");
+        mapResult = read(conn, iIdUtente);
+      }
+    }
+    catch (Exception ex) {
+      oLogger.error("Exception in WSUtenti.check(" + sUsername + ",*," + iIdTipo + ")", ex);
+      throw ex;
+    }
+    finally {
+      if(rs   != null) try{ rs.close();   } catch(Exception ex) {}
+      if(pstm != null) try{ pstm.close(); } catch(Exception ex) {}
+      if(conn != null) ConnectionManager.closeConnection(conn);
+    }
+    if(mapResult == null) mapResult = new HashMap<String, Object>();
+    return mapResult;
+  }
   
   public static
   Map<String, Object> read(String sUsername)
@@ -562,7 +612,7 @@ class WSUtenti implements IUtente
       }
     }
     catch (Exception ex) {
-      oLogger.error("Eccezione in WSUtenti.read(" + sUsername + ")", ex);
+      oLogger.error("Exception in WSUtenti.read(" + sUsername + ")", ex);
       throw ex;
     }
     finally {
@@ -597,7 +647,7 @@ class WSUtenti implements IUtente
       }
     }
     catch (Exception ex) {
-      oLogger.error("Eccezione in WSUtenti.readByEmail(" + sEmail + ")", ex);
+      oLogger.error("Exception in WSUtenti.readByEmail(" + sEmail + ")", ex);
       throw ex;
     }
     finally {
@@ -617,7 +667,6 @@ class WSUtenti implements IUtente
     
     QueryBuilder qb = new QueryBuilder();
     qb.add("USERNAME");
-    qb.add("PASSWORD");
     qb.add("ID_TIPO_UTENTE");
     qb.add("COGNOME");
     qb.add("NOME");
@@ -639,7 +688,6 @@ class WSUtenti implements IUtente
       rs = pstm.executeQuery();
       if(rs.next()) {
         String sUserName      = rs.getString("USERNAME");
-        String sPassword      = rs.getString("PASSWORD");
         int iIdTipoUtente     = rs.getInt("ID_TIPO_UTENTE");
         String sCognome       = rs.getString("COGNOME");
         String sNome          = rs.getString("NOME");
@@ -650,11 +698,9 @@ class WSUtenti implements IUtente
         String sEmail         = rs.getString("EMAIL");
         String sAttivo        = rs.getString("ATTIVO");
         Timestamp tsDtRe      = rs.getTimestamp("DT_INS");
-        if(sPassword == null) sPassword = "";
         
         result.put(sID,               iId);
         result.put(sUSERNAME,         sUserName);
-        result.put(sPASSWORD,         decrypt(sPassword));
         result.put(sID_TIPO,          iIdTipoUtente);
         result.put(sCOGNOME,          sCognome);
         result.put(sNOME,             sNome);
@@ -718,12 +764,12 @@ class WSUtenti implements IUtente
       if(sPassword != null) sPassword = sPassword.trim();
       if(sEmail    != null) sEmail = sEmail.trim().replace(' ', '_');
       
-      Timestamp tsDtIns = new Timestamp(System.currentTimeMillis()); 
+      Timestamp tsDtIns = new Timestamp(System.currentTimeMillis());
       
       int p = 0;
       pstm.setInt(++p,       iId);
       pstm.setString(++p,    sUsername);
-      pstm.setString(++p,    encrypt(sPassword));
+      pstm.setString(++p,    WSFM.encrypt(sPassword));
       pstm.setInt(++p,       iIdTipoUtente);
       pstm.setString(++p,    sCognome);
       pstm.setString(++p,    sNome);
@@ -763,7 +809,7 @@ class WSUtenti implements IUtente
       if(rs.next()) iResult = rs.getInt("ID_UTENTE");
     }
     catch (Exception ex) {
-      oLogger.error("Eccezione in WSUtenti.exist(conn," + sUsername + ")", ex);
+      oLogger.error("Exception in WSUtenti.exist(conn," + sUsername + ")", ex);
       throw ex;
     }
     finally {
@@ -787,7 +833,7 @@ class WSUtenti implements IUtente
       if(rs.next()) sResult = rs.getString("DESCRIZIONE");
     }
     catch (Exception ex) {
-      oLogger.error("Eccezione in WSUtenti.getDescTipo(conn," + iIdTipoUtente + ")", ex);
+      oLogger.error("Exception in WSUtenti.getDescTipo(conn," + iIdTipoUtente + ")", ex);
       throw ex;
     }
     finally {
@@ -796,67 +842,4 @@ class WSUtenti implements IUtente
     }
     return sResult;
   }
-  
-  public static
-  String encrypt(String sText)
-  {
-    if (sText == null) {
-      return null;
-    }
-    // La chiave puo' contenere caratteri che appartengono all'insieme
-    // [32 (spazio) - 95 (_)]
-    String sKey = "@X<:S=?'B;F)<=B>D@?=:D';@=B<?C;)@:'/=?A-X0=;(?1<X!";
-    int k = 0;
-    StringBuffer sb = new StringBuffer(sText.length());
-    for (int i = 0; i < sText.length(); i++) {
-      if (k >= sKey.length() - 1) {
-        k = 0;
-      } else {
-        k++;
-      }
-      int c = sText.charAt(i);
-      int d = sKey.charAt(k);
-      int r = c;
-      if (c >= 32 && c <= 126) {
-        r = r - d;
-        if (r < 32) {
-          r = 127 + r - 32;
-        }
-      }
-      sb.append((char) r);
-    }
-    return sb.toString();
-  }
-  
-  public static
-  String decrypt(String sText)
-  {
-    if (sText == null) {
-      return null;
-    }
-    // La chiave pu� contenere caratteri che appartengono all'insieme
-    // [32 (spazio) - 95 (_)]
-    String sKey = "@X<:S=?'B;F)<=B>D@?=:D';@=B<?C;)@:'/=?A-X0=;(?1<X!";
-    int k = 0;
-    StringBuffer sb = new StringBuffer(sText.length());
-    for (int i = 0; i < sText.length(); i++) {
-      if (k >= sKey.length() - 1) {
-        k = 0;
-      } else {
-        k++;
-      }
-      int c = sText.charAt(i);
-      int d = sKey.charAt(k);
-      int r = c;
-      if (c >= 32 && c <= 126) {
-        r = r + d;
-        if (r > 126) {
-          r = 31 + r - 126;
-        }
-      }
-      sb.append((char) r);
-    }
-    return sb.toString();
-  }
 }
-
