@@ -1,6 +1,6 @@
 # CMS - GUI
 
-Swing GUI for CMS.
+Swing GUI tool for CMS.
 
 ## Build
 
