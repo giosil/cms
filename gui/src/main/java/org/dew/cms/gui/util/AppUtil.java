@@ -80,9 +80,6 @@ class AppUtil
     for(int i = 0; i < iLength; i++) {
       char c = text.charAt(i);
       switch (c) {
-        case    '<':   sb.append("&lt;");     break;
-        case    '>':   sb.append("&gt;");     break;
-        case    '&':   sb.append("&amp;");    break;
         case '\300':   sb.append("&Agrave;"); break;
         case '\310':   sb.append("&Egrave;"); break;
         case '\314':   sb.append("&Igrave;"); break;
