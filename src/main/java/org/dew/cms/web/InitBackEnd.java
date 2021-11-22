@@ -50,8 +50,8 @@ class InitBackEnd extends HttpServlet
       return;
     }
     
-    String sCfgFileName = config.getInitParameter("nam.cfg");
-    BEConfig.loadConfig(sCfgFileName);
+    String cfgFileName = config.getInitParameter("cms.cfg");
+    BEConfig.loadConfig(cfgFileName);
     
     sImportFolder = BEConfig.getImportFolder();
     

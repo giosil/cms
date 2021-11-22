@@ -59,8 +59,8 @@ class WebMultimedia extends HttpServlet
   {
     super.init(config);
     if(!BEConfig.isConfigFileLoaded()) {
-      String sCfgFileName = config.getInitParameter("nam.cfg");
-      BEConfig.loadConfig(sCfgFileName);
+      String cfgFileName = config.getInitParameter("cms.cfg");
+      BEConfig.loadConfig(cfgFileName);
     }
     small_preview_width   = BEConfig.getInt("multimedia.small_preview_width",     small_preview_width);
     small_preview_height  = BEConfig.getInt("multimedia.small_preview_height",    small_preview_height);
