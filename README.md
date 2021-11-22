@@ -4,6 +4,18 @@ A simple Content Management System.
 
 This repository contains only the engine and the tool (see gui folder) for management.
 
+## Dependencies
+
+**multi-rpc 2.0.0**
+
+- `git clone https://github.com/giosil/multi-rpc.git` 
+- `mvn clean install` - this will publish `multi-rpc-2.0.0.jar` in Maven local repository
+
+## Build
+
+- `git clone https://github.com/giosil/cms.git`
+- `mvn clean install`
+
 ## Example
 
 ```jsp
@@ -48,7 +60,7 @@ This repository contains only the engine and the tool (see gui folder) for manag
 
 ## Run Management Tool (org.dew.swingup.main.Main) from CMS-gui (see gui folder) sub-project
 
-Default credentials: admin / admin.
+Default credentials: admin / admin
 
 ### Multimedia
 
@@ -61,11 +73,6 @@ Default credentials: admin / admin.
 ### Multimedia articles
 
 ![Multimedia articles](img/03_articles_mult.png)
-
-## Build
-
-- `git clone https://github.com/giosil/cms.git`
-- `mvn clean install`
 
 ## Contributors
 
