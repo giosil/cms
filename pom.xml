@@ -61,7 +61,7 @@
     <plugins>
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
-        <version>2.2</version>
+        <version>3.2.2</version>
         <configuration>
           <archive>
             <manifestFile>src/main/webapp/META-INF/MANIFEST.MF</manifestFile>
