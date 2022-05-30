@@ -318,7 +318,16 @@ class QueryBuilder
           value = vtemp.toString();
         }
         
-        sbWhere.append(sField);
+        String sFieldName = null;
+        int iSepFieldAlias = sField.indexOf(' ');
+        if(iSepFieldAlias > 0) {
+          sFieldName = sField.substring(0, iSepFieldAlias);
+        }
+        else {
+          sFieldName = sField;
+        }
+        
+        sbWhere.append(sFieldName);
         if(boLike) {
           sbWhere.append(" LIKE ");
         }
@@ -349,59 +358,46 @@ class QueryBuilder
   }
   
   public
-  void put(String key, Object value)
+  void add(String field)
+  {
+    if(!listFields.contains(field)) {
+      listFields.add(field);
+    }
+  }
+  
+  public
+  void put(String field, Object value)
   {
     if(value == null) {
-      mapValues.put(key, NULL);
+      mapValues.put(field, NULL);
     }
     else {
-      mapValues.put(key, value);
+      mapValues.put(field, value);
     }
     
-    if(!listFields.contains(key)) {
-      listFields.add(key);
+    if(!listFields.contains(field)) {
+      listFields.add(field);
     }
   }
   
   public
-  void add(String sField)
-  {
-    if(!listFields.contains(sField)) {
-      listFields.add(sField);
-    }
-  }
-  
-  public
-  void put(String key, Object value, Object defaultValue)
+  void put(String field, Object value, Object defaultValue)
   {
     if(value == null) {
       if(defaultValue == null) {
-        mapValues.put(key, NULL);
+        mapValues.put(field, NULL);
       }
       else {
-        mapValues.put(key, defaultValue);
+        mapValues.put(field, defaultValue);
       }
     }
     else {
-      mapValues.put(key, value);
+      mapValues.put(field, value);
     }
     
-    if(!listFields.contains(key)) {
-      listFields.add(key);
+    if(!listFields.contains(field)) {
+      listFields.add(field);
     }
-  }
-  
-  protected static
-  String doubleQuotes(String text)
-  {
-    StringBuffer result = new StringBuffer(text.length());
-    char c;
-    for(int i = 0; i < text.length(); i++) {
-      c = text.charAt(i);
-      if(c == '\'') result.append('\'');
-      result.append(c);
-    }
-    return result.toString();
   }
   
   protected
@@ -428,6 +424,19 @@ class QueryBuilder
       sResult = sResult.substring(0, sResult.length() - 1);
     }
     return sResult;
+  }
+  
+  public static
+  String doubleQuotes(String text)
+  {
+    StringBuilder result = new StringBuilder(text.length());
+    char c;
+    for(int i = 0; i < text.length(); i++) {
+      c = text.charAt(i);
+      if(c == '\'') result.append('\'');
+      result.append(c);
+    }
+    return result.toString();
   }
   
   public static
